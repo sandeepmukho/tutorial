@@ -102,6 +102,20 @@ public class MatrixSubsetSum {
 		return myInt;
 	}
 
+	public static int[][] getColumnSumMatrix(int A[][]) {
+		int[][] myInt = getSimiliarSizeMatrix(A);
+		int m = A.length;
+		int n = A[0].length;
+		for (int j = 0; j < n; j++) {
+			int sum = 0;
+			for (int i = 0; i < m; i++) {
+				sum += A[i][j];
+				myInt[i][j] += sum;
+			}
+		}
+		return myInt;
+	}
+
 	public static int[][] getSumMatrix(int A[][]) {
 		int[][] myInt = getSimiliarSizeMatrix(A);
 		for (int i = 0; i < A.length; i++) {
@@ -122,16 +136,36 @@ public class MatrixSubsetSum {
 
 	public static int getSubsetSumOptimized(Point P1, Point P2, int S[][]) {
 		int sum = S[P2.x][P2.y];
-		//System.out.println(S[P2.x][P2.y]);
-		//System.out.println(S[P1.x][P1.y]);
-		System.out.println("P1.x - " +P1.x + " , P1.y - " + P1.y);
-		System.out.println("P2.x - " +P2.x + " , P2.y - " + P2.y);
-		for (int i = P1.x, j = P1.y; (i >0) || (j > 0); i--, j--) {
-			System.out.println(i +" , " + j);
-			if (i - 1 >= 0 || j -1 >=0) {
-				sum -= S[P2.x][P1.x];
-			}
+		System.out.println();
+		System.out.print("Sum: " + S[P2.x][P2.y]);
+		// System.out.println(S[P2.x][P2.y]);
+		// System.out.println(S[P1.x][P1.y]);
+		// System.out.println("P1.x - " +P1.x + " , P1.y - " + P1.y);
+		// System.out.println("P2.x - " +P2.x + " , P2.y - " + P2.y);
+		// Remove elements between (0, 0) and (P1.x, P2.y)
+
+		/*
+		 * for (int i = P1.x, j = P1.y; (i >0) || (j > 0); i--, j--) {
+		 * System.out.println(i +" , " + j); if (i - 1 >= 0 || j -1 >=0) { sum
+		 * -= S[P2.x][P1.x]; } }
+		 */
+
+		if (P1.x > 0) {
+			System.out.print(" - " + S[P1.x - 1][P2.y]);
+			sum -= S[P1.x - 1][P2.y];
 		}
+		// Remove elements between (0, 0) and (P2.x, P1.y-1)
+		if (P1.y > 0) {
+			System.out.print(" - " + S[P2.x][P1.y - 1]);
+			sum -= S[P2.x][P1.y - 1];
+		}
+		// Add S[P1.x-1]P2.x-1] as elements between (0, 0)
+		// and (P1.x-1, P2.y-1) are subtracted twice
+		if (P1.x > 0 && P1.y > 0) {
+			System.out.print(" + " + S[P1.x - 1][P1.y - 1]);
+			sum += S[P1.x - 1][P1.y - 1];
+		}
+		System.out.println();
 		return sum;
 	}
 
@@ -142,42 +176,37 @@ public class MatrixSubsetSum {
 
 		int rowSumA[][] = getRowSumMatrix(A);
 
-		//printMatrix(rowSumA, "RowSum Matrix");
+		// printMatrix(rowSumA, "RowSum Matrix");
+
+		// printMatrix(getColumnSumMatrix(A), "Column Sum Matrix");
 
 		int SumA[][] = getSumMatrix(A);
 
 		printMatrix(SumA, "Sum Matrix");
 
-		
 		Point a1 = new Point(0, 0);
 		Point a2 = new Point(2, 2);
-		
+
 		System.out.println("Subset Sum - " + getSubsetSum(a1, a2, A));
 		System.out.println("Subset Sum Optimized - " + getSubsetSumOptimized(a1, a2, SumA));
-		
+
 		a1 = new Point(0, 1);
 		a2 = new Point(2, 2);
 
 		System.out.println("Subset Sum - " + getSubsetSum(a1, a2, A));
 		System.out.println("Subset Sum Optimized - " + getSubsetSumOptimized(a1, a2, SumA));
-		
+
 		a1 = new Point(1, 1);
 		a2 = new Point(2, 2);
 
-		
 		System.out.println("Subset Sum - " + getSubsetSum(a1, a2, A));
 		System.out.println("Subset Sum Optimized - " + getSubsetSumOptimized(a1, a2, SumA));
-		
-		/*
+
+
 		a1 = new Point(1, 0);
 		a2 = new Point(2, 2);
-
 		System.out.println("Subset Sum - " + getSubsetSum(a1, a2, A));
 		System.out.println("Subset Sum Optimized - " + getSubsetSumOptimized(a1, a2, SumA));
-		*/
-		
-		
-		
 
 	}
 }
